@@ -833,6 +833,56 @@ class Solution:
                 else:
                     p2+=1
         return res
+
+
+    '''
+    969.Pancake Sorting
+    煎饼排序
+    https://mp.weixin.qq.com/s?__biz=MzU0ODMyNDk0Mw==&mid=2247495641&idx=1&sn=59bc294b517a4d0496556d08df88cc98&chksm=fb427cf9cc35f5ef7623871a4f35ba517e6a324e9dc97920e38367cf6479435413511d48048c&scene=27
+    '''
+    def pancakeSort(self, arr: List[int]) -> List[int]:
+        def flip(arr,k):
+            l,r=0,k
+            while l<r:
+                arr[l],arr[r]=arr[r],arr[l]
+                l+=1
+                r-=1
+
+        res=[]
+        n=len(arr)
+        for i in range(n-1,-1,-1):
+            maxj=i
+            for j in range(0,i):
+                if arr[j]> arr[maxj]: maxj=j
+            #剪枝
+            if maxj!=i:
+                if maxj!=0:
+                    flip(arr,maxj)
+                    res.append(maxj+1)
+                if i!=0:
+                    flip(arr,i)
+                    res.append(i+1)
+        return res
+
+    '''
+    948. Bag of Tokens
+    '''         
+    def bagOfTokensScore(self, tokens: List[int], power: int) -> int:
+        tokens.sort()
+        l,r=0,len(tokens)-1
+        score=0
+        while l<r:
+            while power>=tokens[l]:
+                power-=tokens[l]
+                score+=1
+                l+=1
+            if l<r:
+                power+=tokens[r]
+                score-=1
+                r-=1
+        if power>=tokens[l]:
+            score+=1
+        return score
         
 
 sol=Solution()
@@ -849,3 +899,5 @@ print(sol.maxProfitAssignment(difficulty = [85,47,57], profit = [24,66,99], work
 print(sol.isLongPressedName(name = "saeed", typed = "ssaaedd"))
 print(sol.sortedSquares([-4,-1,0,3,10]))
 print(sol.intervalIntersection(firstList = [[1,3],[5,9]], secondList = []))
+print(sol.pancakeSort([3,2,4,1]))
+print(sol.bagOfTokensScore(tokens = [100,200,300,400], power = 200))
