@@ -810,8 +810,29 @@ class Solution:
             p2+=1
         return res 
 
-        
-
+    '''
+    986. Interval List Intersections
+    直观逻辑的思路
+    '''
+    def intervalIntersection(self, firstList: List[List[int]], secondList: List[List[int]]) -> List[List[int]]:
+        p1,p2=0,0
+        n1,n2=len(firstList),len(secondList)
+        res=[]
+        while p1<n1 and p2<n2:
+            if firstList[p1][1]<secondList[p2][0]:
+                p1+=1
+            elif secondList[p2][1]<firstList[p1][0]:
+                p2+=1
+            else:
+                # 有交集
+                l=max(firstList[p1][0],secondList[p2][0])
+                r=min(firstList[p1][1],secondList[p2][1])
+                res.append([l,r])
+                if r==firstList[p1][1]:
+                    p1+=1
+                else:
+                    p2+=1
+        return res
         
 
 sol=Solution()
@@ -827,4 +848,4 @@ nums=[0,1,0,3,12]
 print(sol.maxProfitAssignment(difficulty = [85,47,57], profit = [24,66,99], worker = [40,25,25]))
 print(sol.isLongPressedName(name = "saeed", typed = "ssaaedd"))
 print(sol.sortedSquares([-4,-1,0,3,10]))
-print(sol.diStringMatch("III"))
+print(sol.intervalIntersection(firstList = [[1,3],[5,9]], secondList = []))
