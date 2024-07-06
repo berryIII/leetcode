@@ -59,19 +59,20 @@ class Solution:
         nums.sort()
         n=len(nums)
         for i in range(n-2):
-            l,r=i+1,n-1
-            twosum=nums[l]+nums[r]
-            while(l<r):
-                if(twosum+nums[i]>0):
-                    r-=1
-                elif(twosum+nums[i]<0):
-                    l+=1
-                else:
-                    res.append([nums[i],nums[l],nums[r]])
-                    while l < r and nums[l] == nums[l + 1]: l += 1
-                    while l < r and nums[r] == nums[r - 1]: r -= 1
-                    l+=1
-                    r-=1
+            if i==0 or nums[i]!=nums[i-1]:
+                l,r=i+1,n-1
+                while(l<r):
+                    twosum=nums[l]+nums[r]
+                    if(twosum+nums[i]>0):
+                        r-=1
+                    elif(twosum+nums[i]<0):
+                        l+=1
+                    else:
+                        res.append([nums[i],nums[l],nums[r]])
+                        while l < r and nums[l] == nums[l + 1]: l += 1
+                        while l < r and nums[r] == nums[r - 1]: r -= 1
+                        l+=1
+                        r-=1
         return res
     
 
@@ -889,6 +890,55 @@ class Solution:
                     p2+=1
         return res
 
+    '''
+    922. Sort Array By Parity II
+    双指针，因为输入一定是半奇半偶，因为两个指针停留在错位的位置即可
+    '''
+    def sortArrayByParityII(self, nums: List[int]) -> List[int]:
+        p1,p2=0,1
+        n=len(nums)
+        while p1<n and p2<n:
+            while p1<n and nums[p1]%2==0:
+                p1+=2
+            while p2<n and nums[p2]%2==1:
+                p2+=2
+            if p1<n and p2<n:
+                nums[p1],nums[p2]=nums[p2],nums[p1]    
+        return nums
+
+    '''
+    923. 3Sum With Multiplicity
+    可以三重循环直观得到解，采用排序+双指针搜索可以降为O(n^2)，对于重复元素的处理，一般是n1*n2
+    n1,n2分别是两端元素的重复个数，但是如果两端相同，则为An2,n为相同元素个数
+    '''
+    def threeSumMulti(self, nums: List[int], target: int) -> int:
+        res=0
+        nums.sort()
+        n=len(nums)
+        for i in range(n-2):
+            l,r=i+1,n-1
+            while(l<r):
+                twosum=nums[l]+nums[r]
+                if(twosum+nums[i]>target):
+                    r-=1
+                elif(twosum+nums[i]<target):
+                    l+=1
+                else:
+                    n1,n2=1,1
+                    for k in range(l+1,r):
+                        if nums[k]==nums[l]:
+                            n1+=1
+                    for k in range(r-1,l,-1):
+                        if nums[k]==nums[r]:
+                            n2+=1
+                    if nums[l]==nums[r]:
+                        res+=(n1+1)*n1//2
+                    else:
+                        res+=n1*n2
+                    l+=n1
+                    r-=n2
+        return res%1000000007
+    
 sol=Solution()
 # colors=[1,2,3,0,0,0]
 # sol.merge(colors,3,[2,5,6],3)
@@ -905,3 +955,5 @@ print(sol.sortedSquares([-4,-1,0,3,10]))
 print(sol.intervalIntersection(firstList = [[1,3],[5,9]], secondList = []))
 print(sol.pancakeSort([3,2,4,1]))
 print(sol.bagOfTokensScore(tokens = [71,55,82], power =54))
+print(sol.threeSumMulti(nums =[0,0,0,0,0], target = 0))
+print(sol.sortArrayByParityII([2,3]))
